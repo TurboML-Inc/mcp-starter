@@ -1,14 +1,12 @@
 import asyncio
-import os
 from typing import Annotated
-from pathlib import Path
 
 from dotenv import load_dotenv
 from fastmcp import FastMCP
 from fastmcp.server.auth.providers.bearer import BearerAuthProvider, RSAKeyPair
 from mcp import ErrorData, McpError
 from mcp.server.auth.provider import AccessToken
-from mcp.types import TextContent, INVALID_PARAMS, INTERNAL_ERROR
+from mcp.types import TextContent, ImageContent, INVALID_PARAMS, INTERNAL_ERROR
 from pydantic import BaseModel, Field, AnyUrl
 
 import markdownify
@@ -18,8 +16,9 @@ import readabilipy
 # --- Load environment variables ---
 load_dotenv()
 
-TOKEN = "03783a9bbf52"
-MY_NUMBER = "9188xxxxxxxx" # Enter your phone number here
+TOKEN = "<authtoken>"
+MY_NUMBER = "91<your-number>"
+
 # --- Auth Provider ---
 class SimpleBearerAuthProvider(BearerAuthProvider):
     def __init__(self, token: str):
@@ -168,10 +167,43 @@ async def job_finder(
 
     raise McpError(ErrorData(code=INVALID_PARAMS, message="Please provide either a job description, a job URL, or a search query in user_goal."))
 
+
+# Image inputs and sending images
+
+MAKE_IMG_BLACK_AND_WHITE_DESCRIPTION = RichToolDescription(
+    description="Convert an image to black and white and save it.",
+    use_when="Use this tool when the user provides an image URL and requests it to be converted to black and white.",
+    side_effects="The image will be processed and saved in a black and white format.",
+)
+
+@mcp.tool(description=MAKE_IMG_BLACK_AND_WHITE_DESCRIPTION.model_dump_json())
+async def make_img_black_and_white(
+    puch_image_data: Annotated[str, Field(description="Base64-encoded image data to convert to black and white")],
+) -> list[TextContent | ImageContent]:
+    import base64
+    import io
+
+    from PIL import Image
+
+    try:
+        image_bytes = base64.b64decode(puch_image_data)
+        image = Image.open(io.BytesIO(image_bytes))
+
+        bw_image = image.convert("L")
+
+        buf = io.BytesIO()
+        bw_image.save(buf, format="PNG")
+        bw_bytes = buf.getvalue()
+        bw_base64 = base64.b64encode(bw_bytes).decode("utf-8")
+
+        return [ImageContent(type="image", mimeType="image/png", data=bw_base64)]
+    except Exception as e:
+        raise McpError(ErrorData(code=INTERNAL_ERROR, message=str(e)))
+
 # --- Run MCP Server ---
 async def main():
-    print("🚀 Starting MCP server on http://0.0.0.0:8085")
-    await mcp.run_async("streamable-http", host="0.0.0.0", port=8085)
+    print("🚀 Starting MCP server on http://0.0.0.0:8086")
+    await mcp.run_async("streamable-http", host="0.0.0.0", port=8086)
 
 if __name__ == "__main__":
     asyncio.run(main())
