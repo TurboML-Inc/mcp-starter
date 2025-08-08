@@ -145,6 +145,7 @@ async def job_finder(
     """
     Handles multiple job discovery methods: direct description, URL fetch, or freeform search query.
     """
+
     if job_description:
         return (
             f"📝 **Job Description Analysis**\n\n"
@@ -161,12 +162,11 @@ async def job_finder(
             f"User Goal: **{user_goal}**"
         )
 
-    if "look for" in user_goal.lower() or "find" in user_goal.lower():
-        links = await Fetch.google_search_links(user_goal)
-        return (
-            f"🔍 **Search Results for**: _{user_goal}_\n\n" +
-            "\n".join(f"- {link}" for link in links)
-        )
+    user_goal = user_goal.strip()
+    if user_goal:
+        query = f"{user_goal} jobs" if "job" not in user_goal.lower() else user_goal
+        links = await Fetch.google_search_links(query)
+        return f"🔍 **Search Results for**: _{query}_\n\n" + "\n".join(f"- {link}" for link in links)
 
     raise McpError(ErrorData(code=INVALID_PARAMS, message="Please provide either a job description, a job URL, or a search query in user_goal."))
 
