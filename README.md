@@ -1,4 +1,3 @@
-````markdown
 ## Setup
 
 1. **Create a virtual environment using [uv](https://github.com/astral-sh/uv):**
@@ -56,4 +55,3 @@
    ```bash
    ngrok http --hostname=my-mcp-app.ngrok.app 8086
    ```
-````
