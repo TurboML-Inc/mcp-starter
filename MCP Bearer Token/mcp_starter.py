@@ -19,7 +19,7 @@ import readabilipy
 load_dotenv()
 
 TOKEN = "03783a9bbf52"
-MY_NUMBER = "918860508975"
+MY_NUMBER = "9188xxxxxxxx" # Enter your phone number here
 # --- Auth Provider ---
 class SimpleBearerAuthProvider(BearerAuthProvider):
     def __init__(self, token: str):
