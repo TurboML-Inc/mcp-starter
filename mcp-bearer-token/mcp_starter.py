@@ -1,6 +1,6 @@
 import asyncio
 from typing import Annotated
-
+import os
 from dotenv import load_dotenv
 from fastmcp import FastMCP
 from fastmcp.server.auth.providers.bearer import BearerAuthProvider, RSAKeyPair
@@ -16,8 +16,11 @@ import readabilipy
 # --- Load environment variables ---
 load_dotenv()
 
-TOKEN = "<authtoken>"
-MY_NUMBER = "91<your-number>"
+TOKEN = os.environ.get("AUTH_TOKEN")
+MY_NUMBER = os.environ.get("MY_NUMBER")
+
+assert TOKEN is not None, "Please set AUTH_TOKEN in your .env file"
+assert MY_NUMBER is not None, "Please set MY_NUMBER in your .env file"
 
 # --- Auth Provider ---
 class SimpleBearerAuthProvider(BearerAuthProvider):
@@ -178,7 +181,7 @@ MAKE_IMG_BLACK_AND_WHITE_DESCRIPTION = RichToolDescription(
 
 @mcp.tool(description=MAKE_IMG_BLACK_AND_WHITE_DESCRIPTION.model_dump_json())
 async def make_img_black_and_white(
-    puch_image_data: Annotated[str, Field(description="Base64-encoded image data to convert to black and white")],
+    puch_image_data: Annotated[str, Field(description="Base64-encoded image data to convert to black and white")] = None,
 ) -> list[TextContent | ImageContent]:
     import base64
     import io

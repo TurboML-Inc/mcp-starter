@@ -17,7 +17,7 @@
     source .venv/bin/activate
     ```
 
-4. **Set your environment variables** (or edit directly in `mcp_starter.py`):
+4. **Set your environment variables in `.env`** Refer to `.env.example`:
     - `TOKEN`: Your bearer token for authentication.
     - `MY_NUMBER`: Your WhatsApp/phone number (for validation tool).
 
