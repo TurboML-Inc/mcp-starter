@@ -50,7 +50,7 @@
    c. **Get a ngrok domain**
    Visit [this](https://ngrok.com/blog-post/free-static-domains-ngrok-users) to learn how to get a free static ngrok domain. You can reserve your domain in the ngrok dashboard under **Domain Management → Domains**.
 
-   c. **Start a tunnel**
+   d. **Start a tunnel**
 
    ```bash
    ngrok http --hostname=my-mcp-app.ngrok.app 8086
