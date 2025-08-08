@@ -31,27 +31,13 @@
 
    The server will start on `http://0.0.0.0:8086`.
 
-6. **Expose your local server with ngrok**  
-   a. **Install the ngrok CLI**
+6. **Expose your local server with cloudflared**
 
-   - macOS (Homebrew):
-     ```bash
-     brew install ngrok/ngrok/ngrok
-     ```
-   - Linux / Windows: download the binary from https://ngrok.com/download and place it on your PATH.
+   a. **Installing `cloudflared`**
+      - Refer [official Cloudflare installation guide](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/downloads/)
 
-   b. **Authenticate**  
-   Copy your authtoken from the ngrok dashboard (https://dashboard.ngrok.com/get-started/your-authtoken) and run:
+   b. **Start a tunnel**
 
    ```bash
-   ngrok config add-authtoken YOUR_NGROK_AUTHTOKEN
-   ```
-
-   c. **Get a ngrok domain**
-   Visit [this](https://ngrok.com/blog-post/free-static-domains-ngrok-users) to learn how to get a free static ngrok domain. You can reserve your domain in the ngrok dashboard under **Domain Management → Domains**.
-
-   d. **Start a tunnel**
-
-   ```bash
-   ngrok http --hostname=my-mcp-app.ngrok.app 8086
+   cloudflared tunnel --url http://0.0.0.0:8086
    ```
