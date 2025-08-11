@@ -123,6 +123,19 @@ mcp = FastMCP(
     auth=SimpleBearerAuthProvider(TOKEN),
 )
 
+# --- Tool: about (optional, but highly recommended!) ---
+@mcp.tool()
+async def about() -> dict[str, str]:
+    server_description = dedent("""
+    This MCP server is designed to assist with job discovery and basic image processing.
+    It provides tools to analyze job descriptions, fetch content from job URLs, and
+    perform web searches for job-related queries. Additionally, it can process
+    images by converting them to black and white.
+    """)
+
+    return {"name": mcp.name, "description": server_description}
+
+
 # --- Tool: validate (required by Puch) ---
 @mcp.tool
 async def validate() -> str:
